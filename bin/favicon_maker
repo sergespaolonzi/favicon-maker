@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require "favicon_maker"
+require "favicon_maker/cli"
+
+arguments = FaviconMaker.cli(ARGV)
+FaviconMaker.run(arguments)

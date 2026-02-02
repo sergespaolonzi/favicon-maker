@@ -5,20 +5,21 @@ module FaviconMaker
    def self.run(argv = ARGV)
       parser = OptionParser.new
       parser.on('--input-raster AAA', 'Raster input file to process.') do |value|
-      p value
+         p value
       end
       parser.on('--input-svg AAA', 'Raster SVG file to process.') do |value|
-      p value
+         p value
       end
       parser.on('--outputdir AAA', 'Output directory.') do |value|
-      p value
+         p value
       end
       options = {}
       parser.parse!(into: options)
-      required_options = [:input, :outputdir]
+      #????????????
+      required_options = [:input-raster, :outputdir]
       missing_options = required_options - options.keys
       unless missing_options.empty?
-      fail "Missing required options: #{missing_options}"
+         fail "Missing required options: #{missing_options}"
       end
    end
 
@@ -51,15 +52,16 @@ module FaviconMaker
       :web_app_manifest_192 => ["web-app-manifest-192x192.png", "192x192!"],
       :web_app_manifest_512 => ["web-app-manifest-512x512.png", "512x512!"]
       }
-      image = MiniMagick::Image.open(input_file)
-
+      
       formats.each do |key, value|
-      output_filename = value[0]
-      dimensions = value[1]
-      output_file = File.join(output_dir, output_filename)
-
-      image.resize dimensions
-      image.write output_file
+         output_filename = value[0]
+         dimensions = value[1]
+         output_file = File.join(output_dir, output_filename)
+         MiniMagick.convert do |convert|
+            convert.size dimensions
+            convert << input_file
+            convert << output_file
+         end
       end
    end
 
