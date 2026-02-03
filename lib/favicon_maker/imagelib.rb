@@ -28,24 +28,23 @@ module Imagelib
          dimensions = value[1]
          output_file = File.join(output_dir, output_filename)
          MiniMagick.convert do |convert|
-            convert.size dimensions
             convert << input_file
+            convert.resize dimensions
             convert << output_file
          end
       end
    end
 
-   def make_svg(input_file, output_dir)
+   def self.make_svg(input_file, output_dir)
       output_filename = "favicon.svg"
       output_file = File.join(output_dir, output_filename)
-      MiniMagick::Image.open(input_file) do |image|
-         if image.format == "svg"
-            image.write output_file
-         else
-            MiniMagick.convert do |convert|
-               convert << input_file
-               convert << output_file
-            end
+      image = MiniMagick::Image.open(input_file)
+      if image.type == "SVG"
+         image.write output_file
+      else
+         MiniMagick.convert do |convert|
+            convert << input_file
+            convert << output_file
          end
       end
    end

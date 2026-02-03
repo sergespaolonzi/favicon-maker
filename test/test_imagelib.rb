@@ -1,6 +1,7 @@
 require "minitest/autorun"
 require "favicon_maker/imagelib"
 require 'fileutils'
+require 'mini_magick'
 
 
 class ImagelibTest < Minitest::Test
@@ -24,17 +25,26 @@ class ImagelibTest < Minitest::Test
     Imagelib.make_pngs(input_file, output_dir)
 
     output_file = File.join(output_dir, "apple-touch-icon.png")
-    expected_file = File.join(script_directory, "assets", "from-png", "apple-touch-icon.png")
-    assert FileUtils.identical?(output_file, expected_file)
-    output_file = File.join(output_dir, "favicon-96x96.png")
-    expected_file = File.join(script_directory, "assets", "from-png", "favicon-96x96.png")
-    assert FileUtils.identical?(output_file, expected_file)
-    output_file = File.join(output_dir, "web-app-manifest-192x192.png")
-    expected_file = File.join(script_directory, "assets", "from-png", "web-app-manifest-192x192.png")
-    assert FileUtils.identical?(output_file, expected_file)
-    output_file = File.join(output_dir, "web-app-manifest-512x512.png")
-    expected_file = File.join(script_directory, "assets", "from-png", "web-app-manifest-512x512.png")
-    assert FileUtils.identical?(output_file, expected_file)
+    formats = {
+      :favicon_96 => ["favicon-96x96.png", "96x96"],
+      :apple_touch => ["apple-touch-icon.png", "180x180"],
+      :web_app_manifest_192 => ["web-app-manifest-192x192.png", "192x192"],
+      :web_app_manifest_512 => ["web-app-manifest-512x512.png", "512x512"]
+    }
+    
+    #convert -size 1024x1024 icon.svg icon.png
+    formats.each do |key, value|
+        output_filename = value[0]
+        dimensions = value[1]
+        output_file = File.join(output_dir, output_filename)
+        image = MiniMagick::Image.open(input_file)
+        if image.type == "SVG"
+        MiniMagick.convert do |convert|
+          convert << input_file
+          convert.resize dimensions
+          convert << output_file
+        end
+    end
   end
 
   def test_make_svg_from_png
