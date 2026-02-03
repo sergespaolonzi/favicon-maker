@@ -45,5 +45,6 @@ module Imagelib
             convert << input_file
             convert << output_file
          end
+      end
    end
 end

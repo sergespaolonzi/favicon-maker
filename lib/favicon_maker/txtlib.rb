@@ -4,7 +4,7 @@ module Txtlib
    def make_html(site_name, output_dir)
       output_filename = "head.html"
       output_file = File.join(output_dir, output_filename)
-      File.open(output_file, "a") do |file|
+      File.open(output_file, "w") do |file|
          file.puts '<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />'
          file.puts '<link rel="icon" type="image/svg+xml" href="/favicon.svg" />'
          file.puts '<link rel="shortcut icon" href="/favicon.ico" />'
