@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "favicon_maker/txtlib"
+require 'fileutils'
 
 class TxtlibTest < Minitest::Test
   def test_make_html
@@ -12,7 +13,10 @@ class TxtlibTest < Minitest::Test
         <meta name=\"apple-mobile-web-app-title\" content=\"#{site_name}\" />
         <link rel="manifest" href="/site.webmanifest" />
     EOF
-    output_dir = "/mnt/c/Users/sergi/Documents/Repo/favicon-maker/test/assets"
+    script_directory = __dir__
+    output_dir = File.join(script_directory, "tmp", "html")
+    FileUtils.mkdir_p output_dir unless File.directory?(output_dir)
+
     result = Txtlib.make_html(site_name, output_dir)
     output_file = File.join(output_dir, "head.html")
     File.open(output_file) do |file|
@@ -48,7 +52,10 @@ class TxtlibTest < Minitest::Test
                 "display"=> "standalone"
                 }
     expected_json = JSON.pretty_generate(manifest)
-    output_dir = "/mnt/c/Users/sergi/Documents/Repo/favicon-maker/test/assets"
+    script_directory = __dir__
+    output_dir = File.join(script_directory, "tmp", "webmanifest")
+    FileUtils.mkdir_p output_dir unless File.directory?(output_dir)
+
     result = Txtlib.make_webappmanifest(name, short_name, theme_color, background_color, output_dir)
     output_file = File.join(output_dir, "site.webmanifest")
     File.open(output_file) do |file|

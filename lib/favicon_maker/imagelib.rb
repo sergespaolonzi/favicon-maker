@@ -2,6 +2,7 @@ require 'mini_magick'
 
 module Imagelib
    def self.make_ico(input_file, output_dir)
+      #convert icon.png -background transparent -define icon:auto-resize=48,32,16 favicon.ico
       output_filename = "favicon.ico"
       output_file = File.join(output_dir, output_filename)
       MiniMagick.convert do |convert|
