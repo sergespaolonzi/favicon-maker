@@ -1,7 +1,7 @@
 require 'json'
 
 module Txtlib
-   def make_html(site_name, output_dir)
+   def self.make_html(site_name, output_dir)
       output_filename = "head.html"
       output_file = File.join(output_dir, output_filename)
       File.open(output_file, "w") do |file|
@@ -14,7 +14,7 @@ module Txtlib
       end
    end
 
-   def make_webappmanifest(name, short_name, theme_color, background_color, output_dir)
+   def self.make_webappmanifest(name, short_name, theme_color, background_color, output_dir)
       manifest = {
                   "name"=>  name,
                   "short_name"=>  short_name,

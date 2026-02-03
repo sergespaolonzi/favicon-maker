@@ -1,7 +1,7 @@
 require 'mini_magick'
 
 module Imagelib
-   def make_ico(input_file, output_dir)
+   def self.make_ico(input_file, output_dir)
       output_filename = "favicon.ico"
       output_file = File.join(output_dir, output_filename)
       MiniMagick.convert do |convert|
@@ -12,13 +12,13 @@ module Imagelib
       end
    end
 
-   def make_pngs(input_file, output_dir)
+   def self.make_pngs(input_file, output_dir)
       # 96, 180, 192, 512
       formats = {
-      :favicon_96 => ["favicon-96x96.png", "96x96!"],
-      :apple_touch => ["apple-touch-icon.png", "180x180!"],
-      :web_app_manifest_192 => ["web-app-manifest-192x192.png", "192x192!"],
-      :web_app_manifest_512 => ["web-app-manifest-512x512.png", "512x512!"]
+      :favicon_96 => ["favicon-96x96.png", "96x96"],
+      :apple_touch => ["apple-touch-icon.png", "180x180"],
+      :web_app_manifest_192 => ["web-app-manifest-192x192.png", "192x192"],
+      :web_app_manifest_512 => ["web-app-manifest-512x512.png", "512x512"]
       }
       
       #convert -size 1024x1024 icon.svg icon.png
@@ -35,15 +35,16 @@ module Imagelib
    end
 
    def make_svg(input_file, output_dir)
-      if input_file extension is svg
-         copy file
-      else
-         output_filename = "favicon.svg"
-         dimensions = "200x200"
-         output_file = File.join(output_dir, output_filename)
-         MiniMagick.convert do |convert|
-            convert << input_file
-            convert << output_file
+      output_filename = "favicon.svg"
+      output_file = File.join(output_dir, output_filename)
+      MiniMagick::Image.open(input_file) do |image|
+         if image.format == "svg"
+            image.write output_file
+         else
+            MiniMagick.convert do |convert|
+               convert << input_file
+               convert << output_file
+            end
          end
       end
    end

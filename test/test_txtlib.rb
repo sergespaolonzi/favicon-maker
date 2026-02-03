@@ -3,6 +3,7 @@ require "favicon_maker/txtlib"
 
 class TxtlibTest < Minitest::Test
   def test_make_html
+    site_name = "App"
     expected_html = <<~EOF
         <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -11,11 +12,9 @@ class TxtlibTest < Minitest::Test
         <meta name=\"apple-mobile-web-app-title\" content=\"#{site_name}\" />
         <link rel="manifest" href="/site.webmanifest" />
     EOF
-    input = ""
-    outputdir = "A", "B"
-    Txtlib::make_html(input, outputdir)
-    result = ""
-    output_file = File.join("head.html", output_filename)
+    output_dir = "/mnt/c/Users/sergi/Documents/Repo/favicon-maker/test/assets"
+    result = Txtlib.make_html(site_name, output_dir)
+    output_file = File.join(output_dir, "head.html")
     File.open(output_file) do |file|
       result = file.read
     end
@@ -23,6 +22,10 @@ class TxtlibTest < Minitest::Test
   end
 
   def test_make_webappmanifest
+    name = "App"
+    short_name = "App" 
+    theme_color = "#ffffff"
+    background_color = "#ffffff"
     manifest = {
                 "name"=>  name,
                 "short_name"=>  short_name,
@@ -45,10 +48,9 @@ class TxtlibTest < Minitest::Test
                 "display"=> "standalone"
                 }
     expected_json = JSON.pretty_generate(manifest)
-    outputdir = "A", "B"
-    Txtlib::make_webappmanifest(input, outputdir)
-    result = ""
-    output_file = File.join("site.webmanifest", output_filename)
+    output_dir = "/mnt/c/Users/sergi/Documents/Repo/favicon-maker/test/assets"
+    result = Txtlib.make_webappmanifest(name, short_name, theme_color, background_color, output_dir)
+    output_file = File.join(output_dir, "site.webmanifest")
     File.open(output_file) do |file|
       result = file.read
     end
