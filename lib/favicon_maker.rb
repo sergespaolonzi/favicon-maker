@@ -1,4 +1,5 @@
 require "favicon_maker/imagelib"
+require "favicon_maker/txtlib"
 
 
 module FaviconMaker
