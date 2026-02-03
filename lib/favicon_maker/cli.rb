@@ -2,10 +2,10 @@ module Cmd
   def self.cli(args)
     options = {}
     parser = OptionParser.new
-    parser.on('--input AAA', 'Required argument via short name') do |value|
+    parser.on('--input AAA', 'Input image.') do |value|
       options[:input] = value
     end
-    parser.on('--outputdir AAA', 'Required argument via long name') do |value|
+    parser.on('--outputdir AAA', 'Output directory.') do |value|
       options[:outputdir] = value
     end
 
