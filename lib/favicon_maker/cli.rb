@@ -1,5 +1,5 @@
-module Cmd
-  def self.cli(args)
+module Cli
+  def cli(args)
     options = {}
     parser = OptionParser.new
     parser.on('--input AAA', 'Input image.') do |value|
