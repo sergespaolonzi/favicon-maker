@@ -2,5 +2,6 @@
 require "favicon_maker"
 require "favicon_maker/cli"
 
-arguments = FaviconMaker::Cli.cli(ARGV)
-FaviconMaker.run(*arguments)
+arguments = Cli.cli(ARGV)
+p *arguments
+FaviconMaker.run(*arguments.values)
