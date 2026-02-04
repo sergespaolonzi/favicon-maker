@@ -24,26 +24,21 @@ class ImagelibTest < Minitest::Test
     FileUtils.mkdir_p output_dir unless File.directory?(output_dir)
     Imagelib.make_pngs(input_file, output_dir)
 
-    output_file = File.join(output_dir, "apple-touch-icon.png")
     formats = {
-      :favicon_96 => ["favicon-96x96.png", "96x96"],
-      :apple_touch => ["apple-touch-icon.png", "180x180"],
-      :web_app_manifest_192 => ["web-app-manifest-192x192.png", "192x192"],
-      :web_app_manifest_512 => ["web-app-manifest-512x512.png", "512x512"]
+      :favicon_96 => ["favicon-96x96.png", 96],
+      :apple_touch => ["apple-touch-icon.png", 180],
+      :web_app_manifest_192 => ["web-app-manifest-192x192.png", 192],
+      :web_app_manifest_512 => ["web-app-manifest-512x512.png", 512]
     }
     
-    #convert -size 1024x1024 icon.svg icon.png
     formats.each do |key, value|
         output_filename = value[0]
-        dimensions = value[1]
+        dimension = value[1]
         output_file = File.join(output_dir, output_filename)
-        image = MiniMagick::Image.open(input_file)
-        if image.type == "SVG"
-        MiniMagick.convert do |convert|
-          convert << input_file
-          convert.resize dimensions
-          convert << output_file
-        end
+        image = MiniMagick::Image.open(output_file)
+        assert image.type == "PNG"
+        assert image.width == dimension
+        assert image.height == dimension
     end
   end
 
@@ -80,19 +75,22 @@ class ImagelibTest < Minitest::Test
     FileUtils.mkdir_p output_dir unless File.directory?(output_dir)
     Imagelib.make_pngs(input_file, output_dir)
 
-
-    output_file = File.join(output_dir, "apple-touch-icon.png")
-    expected_file = File.join(script_directory, "assets", "from-svg", "apple-touch-icon.png")
-    assert FileUtils.identical?(output_file, expected_file)
-    output_file = File.join(output_dir, "favicon-96x96.png")
-    expected_file = File.join(script_directory, "assets", "from-svg", "favicon-96x96.png")
-    assert FileUtils.identical?(output_file, expected_file)
-    output_file = File.join(output_dir, "web-app-manifest-192x192.png")
-    expected_file = File.join(script_directory, "assets", "from-svg", "web-app-manifest-192x192.png")
-    assert FileUtils.identical?(output_file, expected_file)
-    output_file = File.join(output_dir, "web-app-manifest-512x512.png")
-    expected_file = File.join(script_directory, "assets", "from-svg", "web-app-manifest-512x512.png")
-    assert FileUtils.identical?(output_file, expected_file)
+    formats = {
+      :favicon_96 => ["favicon-96x96.png", 96],
+      :apple_touch => ["apple-touch-icon.png", 180],
+      :web_app_manifest_192 => ["web-app-manifest-192x192.png", 192],
+      :web_app_manifest_512 => ["web-app-manifest-512x512.png", 512]
+    }
+    
+    formats.each do |key, value|
+        output_filename = value[0]
+        dimension = value[1]
+        output_file = File.join(output_dir, output_filename)
+        image = MiniMagick::Image.open(output_file)
+        assert image.type == "PNG"
+        assert image.width == dimension
+        assert image.height == dimension
+    end
   end
 
   def test_make_svg_from_svg
